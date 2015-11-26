@@ -1,0 +1,88 @@
+.text-editor {
+  height: 0;
+  padding-bottom: 100%;
+}
+
+.text-editor-container {
+  width: 50%;
+  position: fixed;
+  overflow: hidden;
+}
+
+.text-editor-header {
+  width: 100%;
+  min-height: 20px;
+  color: #E0E0E0;
+  background-color: #22282E !important;
+}
+
+.text-editor-header .mdl-layout__header-row {
+  height: 33px;
+}
+
+.text-editor-header
+.mdl-layout__header-row
+.mdl-layout-title {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.text-editor-button {
+  height: 20px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 20px;
+  color: #E0E0E0;
+  border: 1px #616161 solid;
+  border-radius: 3px;
+  margin-left: 20px;
+}
+
+.run-button {
+  background-color: #51b9b0;
+  border: 0px;
+}
+
+#editor {
+  position: relative;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  width: 100%;
+  height: 100%;
+  font-family: Menlo, 'Ubuntu Mono', Monaco, Consolas, source-code-pro, monospace;
+}
+
+.icon {
+  margin-left: 6px;
+}
+
+.cursor-position {
+  font-size: 12px;
+  color: #757575;
+  float: left;
+  margin-left: 15px;
+}
+
+.save-indicator {
+  width: 10px;
+  height: 10px;
+  margin-top: 4px;
+  margin-left: 10px;
+  border-radius: 10px;
+  float: left;
+}
+
+.green {
+  background: green;
+}
+
+.red {
+  background: red;
+}
+
+.editor-theme {
+  color: #757575;
+  font-size: 12px;
+  margin-right: 10px;
+  float: right;
+}

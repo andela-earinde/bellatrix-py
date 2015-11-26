@@ -1,0 +1,40 @@
+body {
+  overflow: hidden;
+  font-family: "Lato", 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+.footer {
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  height: 20px !important;
+  color: black;
+  background-color: #232323 !important;
+}
+
+.hide {
+  display: none;
+}
+
+.mdl-layout__container {
+  width: 100%;
+}
+
+.mdl-layout__content {
+  overflow: hidden;
+  width: 50%;
+  height: 100%;
+}
+
+.mdl-layout-title {
+  text-transform: capitalize;
+}
+
+.mdl-layout__header-row span {
+  margin: 0px auto;
+}
+
+.page-content {
+  width: 50%;
+  height: 100%;
+}

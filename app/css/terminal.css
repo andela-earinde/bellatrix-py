@@ -1,0 +1,153 @@
+.terminal {
+  position: fixed;
+  width: 50%;
+  height: 100%;
+  border-left: 1px solid #424242;
+}
+
+.terminal-header {
+  width: 100%;
+  min-height: 20px;
+  background-color: #22282E !important;
+  color: white;
+}
+
+.terminal-header .mdl-layout__header-row {
+  height: 33px;
+}
+
+.terminal-header
+.mdl-layout__header-row
+.terminal-editor-button {
+  color: white;
+  height: 20px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 20px;
+  margin: 0 auto;
+  border: 1px #616161 solid;
+  border-radius: 3px;
+}
+
+/* The console container element */
+#console {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #141414;
+}
+
+/* The inner console element. */
+.jqconsole {
+  padding: 10px;
+  word-wrap: break-word;
+  border-radius: 0px;
+  border: 0px;
+  background-color: #141414;
+  font-size: 13px;
+  font-family: Menlo, 'Ubuntu Mono', Monaco, Consolas, source-code-pro, monospace;
+}
+/* The cursor. */
+.jqconsole-cursor {
+  background-color: gray;
+}
+/* The cursor color when the console looses focus. */
+.jqconsole-blurred .jqconsole-cursor {
+  background-color: #666;
+}
+/* The current prompt text color */
+.jqconsole-prompt {
+  color: #0d0;
+}
+/* The command history */
+.jqconsole-old-prompt {
+  color: #0b0;
+  font-weight: normal;
+}
+/* The text color when in input mode. */
+.jqconsole-input {
+  color: #dd0;
+}
+/* Previously entered input. */
+.jqconsole-old-input {
+  color: #bb0;
+  font-weight: normal;
+}
+/* The text color of the output. */
+.jqconsole-error {
+  color: #F06;
+}
+
+.jqconsole-output {
+  color: white;
+}
+
+.jqconsole-header span {
+  color: white;
+}
+
+/* css loader*/
+.load7 {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 25%;
+  height: 50px;
+}
+
+.loader:before,
+.loader:after,
+.loader {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1.8s infinite ease-in-out;
+  animation: load7 1.8s infinite ease-in-out;
+}
+.loader {
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 3.5em;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+@-webkit-keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em #ffffff;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0 #ffffff;
+  }
+}
+@keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em #ffffff;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0 #ffffff;
+  }
+}
