@@ -12,7 +12,7 @@ var PythonContainer = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     // Retrieve code in editor
-    if(this.props.editorText) {
+    if(nextProps.editorText) {
       this.evaluateCode(nextProps.editorText)
     }
   },
@@ -58,6 +58,20 @@ var PythonContainer = React.createClass({
     });
   },
 
+  testCrap: function() {
+    var self = this;
+    var vm = new pythonRepl()
+
+    vm.stdout = this.resultOutput;
+    vm.stderr = this.errorCallback;
+
+    vm.ready().then(function() {
+      return vm.repl(self.startPrompt);
+    }).then(null, function(err) {
+      jqconsole.Write('ERROR: ' + err + '- Reload the repl', 'jqconsole-error');
+    });
+  },
+
   registerShortcuts: function() {
     // Ctrl+A: Move terminal to the start.
     jqconsole.RegisterShortcut('A', function() {
@@ -76,11 +90,13 @@ var PythonContainer = React.createClass({
   },
 
   evaluateCode: function(code) {
+    var self = this;
     jqconsole.AbortPrompt();
     pythonRepl.exec(code).then(function(){
-      //return pythonRepl.repl(self.startPrompt);
+      self.testCrap()
     },function(err) {
       pythonRepl.stderr(err.trace);
+      self.testCrap()
     });
   },
 
