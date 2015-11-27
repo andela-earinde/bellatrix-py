@@ -152,7 +152,7 @@ var template = [
 if (process.platform == 'darwin') {
   var name = require('app').getName();
   template.unshift({
-    label: 'Bellatrix',
+    label: 'Bellatrixpy',
     submenu: [
       {
         label: 'About ' + name,

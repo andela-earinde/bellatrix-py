@@ -31,20 +31,12 @@ var PythonContainer = React.createClass({
 
   loadLanguage: function(language) {
     var self = this;
-    // Override default printing
-    pythonRepl.stdout = this.resultOutput;
-
-    pythonRepl.stderr = this.errorCallback;
 
     jqconsole = $('#console').jqconsole('python \n', '>>>', '...');
 
     this.registerShortcuts();
 
-    pythonRepl.ready().then(function() {
-      return pythonRepl.repl(self.startPrompt);
-    }).then(null, function(err) {
-      jqconsole.Write('ERROR: ' + err + '- Reload the repl', 'jqconsole-error');
-    });
+    this.startRepl()
   },
 
   startPrompt: function(ps1) {
@@ -58,10 +50,11 @@ var PythonContainer = React.createClass({
     });
   },
 
-  testCrap: function() {
+  startRepl: function() {
     var self = this;
     var vm = new pythonRepl()
 
+    // Override default printing
     vm.stdout = this.resultOutput;
     vm.stderr = this.errorCallback;
 
@@ -93,10 +86,10 @@ var PythonContainer = React.createClass({
     var self = this;
     jqconsole.AbortPrompt();
     pythonRepl.exec(code).then(function(){
-      self.testCrap()
+      self.startRepl()
     },function(err) {
       pythonRepl.stderr(err.trace);
-      self.testCrap()
+      self.startRepl()
     });
   },
 

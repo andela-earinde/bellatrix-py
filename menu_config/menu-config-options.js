@@ -3,7 +3,6 @@
 
 exports.languages = [
   ["Javascript", "javascript"],
-  ["Ruby", "ruby"],
   ["Coffeescript", "coffeescript"],
   ["Python", "python"],
   ["Markdown", "markdown"]

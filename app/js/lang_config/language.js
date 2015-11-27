@@ -11,10 +11,6 @@ exports.languageSpec = function(language) {
         return handleJavascript();
         break;
 
-      case 'ruby':
-        return handleRuby();
-        break;
-
       case 'coffeescript':
         return handleCoffeeScript()
         break;
@@ -23,11 +19,6 @@ exports.languageSpec = function(language) {
   function handleJavascript() {
     return "Native Chrome JavaScript.\n" +
             "Copyright (c) 2015 Google Inc"
-  }
-
-  function handleRuby() {
-    return "Ruby 1.8.7 (2008-05-31 patchlevel 0) [x86-linux]\n" +
-           "[GCC 4.2.1 (LLVM, Emscripten 1.5, Emscripted-Ruby)]"
   }
 
   function handleCoffeeScript() {
