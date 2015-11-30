@@ -6,7 +6,7 @@ require('../../css/terminal.css');
 
 // Note this are initiated from the global
 // window in index.html
-var jqconsole;
+var jqconsole, vm;
 
 var PythonContainer = React.createClass({
 
@@ -52,7 +52,7 @@ var PythonContainer = React.createClass({
 
   startRepl: function() {
     var self = this;
-    var vm = new pythonRepl()
+    vm = new pythonRepl()
 
     // Override default printing
     vm.stdout = this.resultOutput;
@@ -85,10 +85,10 @@ var PythonContainer = React.createClass({
   evaluateCode: function(code) {
     var self = this;
     jqconsole.AbortPrompt();
-    pythonRepl.exec(code).then(function(){
+    vm.exec(code).then(function(){
       self.startRepl()
     },function(err) {
-      pythonRepl.stderr(err.trace);
+      vm.stderr(err.trace);
       self.startRepl()
     });
   },
