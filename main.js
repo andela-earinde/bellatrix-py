@@ -27,7 +27,11 @@ app.on('ready', function() {
   mainWindow.loadUrl('file://' + __dirname + '/app/index.html');
 
   if(debug) {
+    mainWindow.loadUrl('file://' + __dirname + '/app/index.dev.html');
     mainWindow.openDevTools();
+  }
+  else {
+    mainWindow.loadUrl('file://' + __dirname + '/app/index.prod.html');
   }
 
   mainWindow.on('closed', function() {

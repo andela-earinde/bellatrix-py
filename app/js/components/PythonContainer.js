@@ -22,7 +22,7 @@ var PythonContainer = React.createClass({
   },
 
   resultOutput: function(value) {
-    jqconsole.Write(value, 'jqconsole-output');
+    jqconsole.Write("=>" + value, 'jqconsole-output');
   },
 
   errorCallback: function(value) {
