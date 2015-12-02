@@ -30,8 +30,9 @@ var PythonContainer = React.createClass({
   },
 
   loadLanguage: function(language) {
-    var version = ""
-    jqconsole = $('#console').jqconsole('python \n', '>>>', '...');
+    var version = "Python 2.7.9 (default, Jul 03 2015, 17:08:29)\n[PyPy 2.6.0]"
+
+    jqconsole = $('#console').jqconsole(version + '\n', '>>>', '...');
 
     this.registerShortcuts();
 
