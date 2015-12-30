@@ -1,92 +1,95 @@
 var ipc = window.require('ipc');
 
-var React = require('react');
+import React from 'react'
 
 //initialize context menu
-require('./context_menu').contextMenu();
+import { contextMenu } from './context_menu'
 
-var GeneralActions = require('./actions/GeneralActions');
-var AppStore = require('./stores/AppStore');
+import GeneralActions from './actions/GeneralActions'
+import AppStore from './stores/AppStore'
 
-var TextEditorContainer = require('./components/TextEditorContainer');
-var PythonContainer = require('./components/PythonContainer');
-var TerminalContainer = require('./components/TerminalContainer');
-var MarkdownContainer = require('./components/MarkdownContainer');
+import TextEditorContainer from './containers/TextEditorContainer'
+import PythonContainer from './containers/PythonContainer'
+import TerminalContainer from './containers/TerminalContainer'
+import MarkdownContainer from './containers/MarkdownContainer'
 
-require('../css/style.css');
+import '../css/style.css'
 
-var Bellatrix = React.createClass({
+class Bellatrix extends React.Component {
 
-  getInitialState: function() {
-    return  {
+  constructor() {
+    super();
+    this.state = {
       theme: 'twilight',
       language: 'javascript',
       editorText: ''
     }
-  },
+  }
 
-  changeLanguage: function(language) {
+  changeLanguage(language) {
     GeneralActions.loadSavedEditorText(language);
     this.setState({
       language: language
     });
-  },
+  }
 
-  changeEditorTheme: function(theme) {
+  changeEditorTheme(theme) {
     this.setState({
       theme: theme
     });
-  },
+  }
 
-  componentWillMount: function() {
+  componentWillMount() {
     /*
     * Register event to change theme and language
     * When component is mounted.
     */
-    var self = this;
-    ipc.on('change-theme', function(theme) {
-      self.changeEditorTheme(theme);
-      GeneralActions.saveCurrentState(self.state);
+
+    //initialize context menu
+    contextMenu()
+
+    ipc.on('change-theme', (theme) => {
+      this.changeEditorTheme(theme);
+      GeneralActions.saveCurrentState(this.state);
     });
 
-    ipc.on('change-language', function(language) {
-      self.changeLanguage(language);
-      GeneralActions.saveCurrentState(self.state);
+    ipc.on('change-language', (language) => {
+      this.changeLanguage(language);
+      GeneralActions.saveCurrentState(this.state);
     });
 
     // Register method for loading saved state
-    AppStore.addLoadSavedStateListener(this.loadSavedState);
-  },
+    AppStore.addLoadSavedStateListener(this.loadSavedState.bind(this));
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     // trigger action to load the saved state
     GeneralActions.loadSavedState()
-  },
+  }
 
-  getEditorText: function(text) {
+  getEditorText(text) {
     this.setState({
       editorText: text
     });
-  },
+  }
 
-  loadSavedState: function(state) {
-    var self = this;
+  loadSavedState(state) {
     /**
     * The python repl takes a lot of time to load, so a timeout
     * is set before the state is changed.
     * TODO: Find a better approach for this issue.
     */
     if (state.language === "python") {
-      setTimeout(function(){
-        self.setState(state)
+      setTimeout(() => {
+        this.setState(state)
       }, 500);
     }
     else {
       this.setState(state);
     }
-  },
+  }
 
-  render: function() {
+  render() {
     var display;
     // If language is markdown display markdown container
     // else display editor
@@ -95,15 +98,13 @@ var Bellatrix = React.createClass({
         <MarkdownContainer
           editorText={this.state.editorText}/>
       );
-    }
-    else if (this.state.language === 'python') {
+    } else if (this.state.language === 'python') {
       display = (
         <PythonContainer
           editorText={this.state.editorText}
           language={this.state.language}/>
       );
-    }
-    else {
+    } else {
       display = (
         <TerminalContainer
           language={this.state.language}
@@ -125,6 +126,6 @@ var Bellatrix = React.createClass({
     );
   }
 
-});
+}
 
 React.render(<Bellatrix />, document.getElementById('bellatrix'));
