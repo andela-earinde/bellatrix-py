@@ -1,23 +1,19 @@
-var React = require('react');
+import React from 'react'
 
-var languageSpec = require('../lang_config/language').languageSpec;
+import TerminalComponent from '../components/TerminalComponent'
 
-// Note: jqconsole and jsrepl loaded in
-// the index.html
-var jqconsole,
-    jsrepl;
+import {languageSpec} from '../lang_config/language'
 
-require('../../css/terminal.css');
 
-var TerminalContainer = React.createClass({
+class TerminalContainer extends React.Component {
 
-  getInitialState: function() {
-    return {
-      showSpinner: true
-    }
-  },
+  constructor(props) {
+    super(props)
+    this.jqconsole
+    this.jsrepl
+  }
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     // Check whether the language prop has changed
     // to load the new language
     if (this.props.language !== nextProps.language) {
@@ -29,40 +25,40 @@ var TerminalContainer = React.createClass({
     if (nextProps.editorText) {
       this.evaluateCode(nextProps.editorText)
     }
-  },
+  }
 
-  componentWillMount: function() {
+  componentWillMount() {
 
-    var inputCallback = function(callback) {
-      jqconsole.Input(function(result) {
+    const inputCallback = (callback) => {
+      this.jqconsole.Input((result) => {
           callback(result);
       });
     };
 
-    var outputCallback = function(string) {
-      jqconsole.Write(string.trimRight() + '\n', 'jqconsole-output');
+    const outputCallback = (string) => {
+      this.jqconsole.Write(`${string.trimRight()}\n`, 'jqconsole-output');
     };
 
-    var resultCallback = function(string) {
+    const resultCallback = (string) => {
       if (string) {
-        jqconsole.Write("=>" + string + '\n', 'jqconsole-output');
+        this.jqconsole.Write(`=> ${string}\n`, 'jqconsole-output');
       }
     };
 
-    var errorCallback = function(string) {
-      jqconsole.Write(string + '\n', 'jqconsole-error');
+    const errorCallback = (string) => {
+      this.jqconsole.Write(`${string}\n`, 'jqconsole-error');
     };
 
-    var progressCallback = function(m, n) {
-
+    const progressCallback = (m, n) => {
+      // Will use later ¯\_(ツ)_/¯
     };
 
-    var timeoutCallback = function() {
+    const timeoutCallback = () => {
       this.loadLanguage(this.props.language);
       return true
     };
 
-    jsrepl = new JSREPL({
+    this.jsrepl = new JSREPL({
       input: inputCallback,
       output: outputCallback,
       result: resultCallback,
@@ -73,80 +69,57 @@ var TerminalContainer = React.createClass({
         callback: timeoutCallback
       }
     });
-  },
+  }
 
-  registerShortcuts: function() {
+  registerShortcuts() {
     // Ctrl+A: Move terminal to the start.
-    jqconsole.RegisterShortcut('A', function() {
-      this.MoveToStart();
-    });
+    this.jqconsole.RegisterShortcut('A', () => this.MoveToStart() );
 
     // Ctrl+E: Move terminal to the end.
-    jqconsole.RegisterShortcut('E', function() {
-      this.MoveToEnd();
-    });
+    this.jqconsole.RegisterShortcut('E', () => this.MoveToEnd() );
 
     // Ctrl+K: Clear terminal.
-    jqconsole.RegisterShortcut('K', function() {
-      this.Clear();
-    });
-  },
+    this.jqconsole.RegisterShortcut('K', () => this.Clear() );
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.loadLanguage(this.props.language);
-  },
+  }
 
-  startPrompt: function() {
+  startPrompt() {
     // Start the prompt with history enabled.
-    var self = this;
-    jqconsole.Prompt(true, function (input) {
+    this.jqconsole.Prompt(true, (input) => {
       // Output input with the class jqconsole-output.
-      jsrepl.eval(input)
+      this.jsrepl.eval(input)
       // Restart the prompt.
-      self.startPrompt();
-    }, jsrepl.checkLineEnd, true);
-  },
+      this.startPrompt();
+    }, this.jsrepl.checkLineEnd, true);
+  }
 
-  loadLanguage: function(language) {
-    var self = this;
-    jsrepl.loadLanguage(language, function () {
-      jqconsole = $('#console').jqconsole(languageSpec(language) + '\n', '>>>', '...');
-      self.registerShortcuts();
-      self.startPrompt();
+  loadLanguage(language) {
+    this.jsrepl.loadLanguage(language, () => {
+      this.jqconsole = $('#console').jqconsole(`${languageSpec(language)}\n`, '>>> ', '...');
+      this.registerShortcuts();
+      this.startPrompt();
     });
-  },
+  }
 
-  evaluateCode: function(code) {
-    jqconsole.AbortPrompt();
-    jsrepl.eval(code);
+  evaluateCode(code) {
+    this.jqconsole.AbortPrompt();
+    this.jsrepl.eval(code);
     this.startPrompt();
-  },
+  }
 
-  clearTerminal: function() {
-    jqconsole.Clear();
-  },
+  clearTerminal() {
+    this.jqconsole.Clear();
+  }
 
-  render: function() {
-    var showSpinner = this.state.showSpinner ? '' : 'none'
-
+  render() {
     return (
-      <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header className="mdl-layout__header terminal-header">
-          <div className="mdl-layout__header-row">
-            <button className="mdl-button mdl-js-button terminal-editor-button" onClick={this.clearTerminal}>
-              clear
-            </button>
-          </div>
-        </header>
-        <div id="console">
-        </div>
-        <footer className="mdl-mini-footer mdl-cell mdl-cell--12-col footer">
-          <div className="mdl-mini-footer__left-section">
-          </div>
-        </footer>
-      </div>
+      <TerminalComponent
+        clearTerminal={this.clearTerminal.bind(this)}/>
     )
   }
-});
+}
 
-module.exports = TerminalContainer;
+export default TerminalContainer
