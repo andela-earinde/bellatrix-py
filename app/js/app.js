@@ -1,6 +1,7 @@
 var ipc = window.require('ipc');
 
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 //initialize context menu
 import { contextMenu } from './context_menu'
@@ -95,4 +96,4 @@ class Bellatrix extends React.Component {
   }
 }
 
-React.render(<Bellatrix />, document.getElementById('bellatrix'));
+ReactDOM.render(<Bellatrix />, document.getElementById('bellatrix'));
