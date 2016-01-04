@@ -1,122 +1,103 @@
 var pythonRepl = window.require('pypyjs');
 
-var React = require('react');
+import React from 'react'
 
-require('../../css/terminal.css');
+import TerminalComponent from '../components/TerminalComponent'
 
-// Note this are initiated from the global
-// window in index.html
-var jqconsole, vm;
 
-var PythonContainer = React.createClass({
+class PythonContainer extends React.Component {
 
-  componentWillReceiveProps: function(nextProps) {
+  constructor(props) {
+    super(props)
+    this.jqconsole
+    this.vm
+  }
+
+  componentWillReceiveProps(nextProps) {
     // Retrieve code in editor
     if(nextProps.editorText) {
       this.evaluateCode(nextProps.editorText)
     }
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.loadLanguage(this.props.language);
-  },
+  }
 
-  resultOutput: function(value) {
-    jqconsole.Write("=>" + value, 'jqconsole-output');
-  },
+  resultOutput(value) {
+    this.jqconsole.Write(`=> ${value}`, 'jqconsole-output');
+  }
 
-  errorCallback: function(value) {
-    jqconsole.Write(value, 'jqconsole-error');
-  },
+  errorCallback(value) {
+    this.jqconsole.Write(value, 'jqconsole-error');
+  }
 
-  loadLanguage: function(language) {
-    var version = "Python 2.7.9 (default, Jul 03 2015, 17:08:29)\n[PyPy 2.6.0]"
+  loadLanguage(language) {
+    const version = `Python 2.7.9 (default, Jul 03 2015, 17:08:29)\n[PyPy 2.6.0]\n`
 
-    jqconsole = $('#console').jqconsole(version + '\n', '>>>', '...');
+    this.jqconsole = $('#console').jqconsole(version, '>>>', '...');
 
     this.registerShortcuts();
 
     this.startRepl()
-  },
+  }
 
-  startPrompt: function(ps1) {
+  startPrompt(ps1) {
     // The argument is ">>> " or "... " depending on REPL state.
-    jqconsole.SetPromptLabel(ps1);
+    this.jqconsole.SetPromptLabel(ps1);
     // Return a promise if prompting for input asynchronously.
-    return new Promise(function(resolve, reject) {
-      jqconsole.Prompt(true, function (input) {
+    return new Promise((resolve, reject) => {
+      this.jqconsole.Prompt(true, (input) => {
         resolve(input);
       });
     });
-  },
+  }
 
-  startRepl: function() {
-    var self = this;
-    vm = new pythonRepl()
+  startRepl() {
+    this.vm = new pythonRepl()
 
     // Override default printing
-    vm.stdout = this.resultOutput;
-    vm.stderr = this.errorCallback;
+    this.vm.stdout = this.resultOutput.bind(this);
+    this.vm.stderr = this.errorCallback.bind(this);
 
-    vm.ready().then(function() {
-      return vm.repl(self.startPrompt);
-    }).then(null, function(err) {
-      jqconsole.Write('ERROR: ' + err + '- Reload the repl', 'jqconsole-error');
+    this.vm.ready().then(() => {
+      return this.vm.repl(this.startPrompt.bind(this));
+    }).then(null, (err) => {
+      this.jqconsole.Write(`ERROR: ${err} - Reload the repl`, 'jqconsole-error');
     });
-  },
+  }
 
-  registerShortcuts: function() {
+  registerShortcuts() {
     // Ctrl+A: Move terminal to the start.
-    jqconsole.RegisterShortcut('A', function() {
-      this.MoveToStart();
-    });
+    this.jqconsole.RegisterShortcut('A', () => this.MoveToStart())
 
     // Ctrl+E: Move terminal to the end.
-    jqconsole.RegisterShortcut('E', function() {
-      this.MoveToEnd();
-    });
+    this.jqconsole.RegisterShortcut('E', () => this.MoveToEnd())
 
     // Ctrl+K: Clear terminal.
-    jqconsole.RegisterShortcut('K', function() {
-      this.Clear();
+    this.jqconsole.RegisterShortcut('K', () => this.Clear())
+  }
+
+  evaluateCode(code) {
+    this.jqconsole.AbortPrompt();
+    this.vm.exec(code).then(() => {
+      this.startRepl()
+    },(err) => {
+      this.vm.stderr(err.trace);
+      this.startRepl()
     });
-  },
+  }
 
-  evaluateCode: function(code) {
-    var self = this;
-    jqconsole.AbortPrompt();
-    vm.exec(code).then(function(){
-      self.startRepl()
-    },function(err) {
-      vm.stderr(err.trace);
-      self.startRepl()
-    });
-  },
+  clearTerminal() {
+    this.jqconsole.Clear();
+  }
 
-  clearTerminal: function() {
-    jqconsole.Clear();
-  },
-
-  render: function() {
-
+  render() {
     return (
-      <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header className="mdl-layout__header terminal-header">
-          <div className="mdl-layout__header-row">
-            <button className="mdl-button mdl-js-button terminal-editor-button" onClick={this.clearTerminal}>
-              clear
-            </button>
-          </div>
-        </header>
-        <div id="console">
-        </div>
-        <footer className="mdl-mini-footer mdl-cell mdl-cell--12-col footer">
-          <div className="mdl-mini-footer__left-section">
-          </div>
-        </footer>
-      </div>
+      <TerminalComponent
+        clearTerminal={this.clearTerminal.bind(this)}/>
     )
   }
-});
+}
 
-module.exports = PythonContainer;
+export default PythonContainer
