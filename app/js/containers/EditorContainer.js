@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import TextEditorContainer from './TextEditorContainer'
+import PythonContainer from './PythonContainer'
 import TerminalContainer from './TerminalContainer'
 import MarkdownContainer from './MarkdownContainer'
 
@@ -24,11 +25,6 @@ class EditorContainer extends React.Component {
     this.editorDomNode = ReactDOM.findDOMNode(this.refs.editor)
   }
 
-  getElementTransform(el) {
-    let compStyle = window.getComputedStyle(el, null)
-    return parseInt(compStyle.getPropertyValue("-webkit-transform").split(",")[4])
-  }
-
   render() {
     let display;
     // If language is markdown display markdown container
@@ -38,13 +34,18 @@ class EditorContainer extends React.Component {
         <MarkdownContainer
           editorText={this.props.editorText}/>
       );
-    }
-    else {
+    } else if (this.props.language === 'python') {
       display = (
-        <TerminalContainer
-          language={this.props.language}
-          editorText={this.props.editorText}/>
+        <PythonContainer
+            language={this.props.language}
+            editorText={this.props.editorText}/>
       );
+    } else {
+        display = (
+          <TerminalContainer
+            language={this.props.language}
+            editorText={this.props.editorText}/>
+        );
     }
 
     return (

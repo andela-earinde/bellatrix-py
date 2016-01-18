@@ -124,9 +124,10 @@ class TextEditorContainer extends React.Component {
     if (this.props.language === "markdown") {
       this.props.getEditorText(this.aceEditor.getValue());
     }
-
-    // automatically save text in editor when there is a change
-    this.saveEditorText()
+    // automatically save text in editor when ther is a change
+    if (event.data.action == 'insertText' || event.data.action == 'removeText') {
+      this.saveEditorText();
+    }
   }
 
   render() {

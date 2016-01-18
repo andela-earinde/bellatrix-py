@@ -36,6 +36,15 @@ class Bellatrix extends React.Component {
     });
   }
 
+  changeEdLanguage(language) {
+    this.changeLanguage(language)
+    GeneralActions.saveCurrentState({
+      theme: this.state.theme,
+      language,
+      editorText: this.state.editorText
+    })
+  }
+
   componentWillMount() {
     /*
     * Register event to change theme and language
@@ -57,6 +66,10 @@ class Bellatrix extends React.Component {
 
     // Register method for loading saved state
     AppStore.addLoadSavedStateListener(this.loadSavedState.bind(this));
+
+    // Register method for changing language from editor
+    // Note: Find a better way of handling this
+    AppStore.addChangeLanguageListener(this.changeEdLanguage.bind(this));
   }
 
   componentDidMount() {
