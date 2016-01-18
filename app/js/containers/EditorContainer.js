@@ -1,12 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import Draggable from 'react-draggable'
-
-import PythonContainer from './PythonContainer'
-import TerminalContainer from './TerminalContainer'
 import TextEditorContainer from './TextEditorContainer'
+import TerminalContainer from './TerminalContainer'
 import MarkdownContainer from './MarkdownContainer'
+
+import DraggableDiv from '../components/DraggableDiv'
 
 import '../../css/style.css'
 
@@ -18,7 +17,6 @@ class EditorContainer extends React.Component {
       width: 0,
       height: 0
     }
-    this.handleDrag = this.handleDrag.bind(this)
   }
 
   componentDidMount() {
@@ -26,9 +24,9 @@ class EditorContainer extends React.Component {
     this.editorDomNode = ReactDOM.findDOMNode(this.refs.editor)
   }
 
-  handleDrag(event, ui) {
-    this.terminalDomNode.style.width = `${this.terminalDomNode.offsetWidth - ui.deltaX}px`
-    this.editorDomNode.style.width = `${this.editorDomNode.offsetWidth + ui.deltaX}px`
+  getElementTransform(el) {
+    let compStyle = window.getComputedStyle(el, null)
+    return parseInt(compStyle.getPropertyValue("-webkit-transform").split(",")[4])
   }
 
   render() {
@@ -40,19 +38,15 @@ class EditorContainer extends React.Component {
         <MarkdownContainer
           editorText={this.props.editorText}/>
       );
-    } else if (this.props.language === 'python') {
-      display = (
-        <PythonContainer
-          editorText={this.props.editorText}
-          language={this.props.language}/>
-      );
-    } else {
+    }
+    else {
       display = (
         <TerminalContainer
           language={this.props.language}
           editorText={this.props.editorText}/>
       );
     }
+
     return (
       <div className="mdl-grid mdl-grid--no-spacing editor-container">
         <div ref="editor" className="mdl-cell mdl-cell--6-col text-editor">
@@ -61,16 +55,12 @@ class EditorContainer extends React.Component {
             language={this.props.language}
             getEditorText={this.props.getEditorText}/>
         </div>
-        <Draggable
-          onDrag={this.handleDrag}
-          axis="x">
-          <div className="draggable-div"></div>
-        </Draggable>
+        <DraggableDiv />
         <div ref="terminal" className="mdl-cell mdl-cell--6-col terminal">
           {display}
         </div>
       </div>
-    )
+    );
   }
 }
 
